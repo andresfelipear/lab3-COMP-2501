@@ -33,32 +33,42 @@ public class BookStore
     {
         BookStore bookStore;
 
-        bookStore = new BookStore(args[0]);
-
-        System.out.println("Print All Titles: ");
-        bookStore.printAllTitles();
-        System.out.println("\n");
-
-        System.out.println("Print Titles Containing: ");
-        bookStore.printTitlesContaining("the", true);
-        System.out.println("\n");
+        if(args.length > 0)
+        {
+            bookStore = new BookStore(args[0]);
 
 
-        final int lengthTitle;
-        lengthTitle = 13;
-        System.out.println("Print Titles of Length = " + lengthTitle);
-        bookStore.printTitlesOfLength(lengthTitle);
-        System.out.println("\n");
+            System.out.println("Print All Titles: ");
+            bookStore.printAllTitles();
+            System.out.println("\n");
 
-        System.out.println("Print Authors names starts or ends with: ");
-        bookStore.printNameStartsEndsWith("aN");
-        System.out.println("\n");
+            System.out.println("Print Titles Containing: ");
+            bookStore.printTitlesContaining("the", true);
+            System.out.println("\n");
 
 
-        System.out.println("Print Longest: ");
-        System.out.println("Longest xyz = "+ bookStore.getLongest("xyz"));
-        System.out.println("Longest AutHor = " + bookStore.getLongest("AutHor"));
-        System.out.println("Longest titlE = " + bookStore.getLongest("titlE"));
+            final int lengthTitle;
+            lengthTitle = 13;
+            System.out.println("Print Titles of Length = " + lengthTitle);
+            bookStore.printTitlesOfLength(lengthTitle);
+            System.out.println("\n");
+
+            System.out.println("Print Authors names starts or ends with: ");
+            bookStore.printNameStartsEndsWith("aN");
+            System.out.println("\n");
+
+
+            System.out.println("Print Longest: ");
+            System.out.println("Longest xyz = "+ bookStore.getLongest("xyz"));
+            System.out.println("Longest AutHor = " + bookStore.getLongest("AutHor"));
+            System.out.println("Longest titlE = " + bookStore.getLongest("titlE"));
+
+        }else
+        {
+            System.out.println("Please include the name of the BookStore as a command line argument");
+        }
+
+
 
     }
 
@@ -140,7 +150,7 @@ public class BookStore
      * Prints all author names that either start or end with substring, in lowercase…
      * the substring match is case-insensitive (e.g. “aN” is the same as “An”, etc.)
      *
-     * @param substring
+     * @param substring the substring to be look in the author name.
      */
     private void printNameStartsEndsWith(String substring)
     {
