@@ -230,24 +230,18 @@ public class BookStore
         {
             if(novel != null)
             {
-                String novelTitle;
-                String sensitiveSubstring;
+                final String lowerNovelTitle;
+                final String lowerSubstring;
 
-                novelTitle = novel.getTitle();
-                sensitiveSubstring = substring; // case sensitive.
+                lowerNovelTitle = novel.getTitle();
+                lowerSubstring = substring; // case sensitive.
 
-                if(novelTitle != null && !novelTitle.isBlank())
+                if(novel.getTitle() != null && !novel.getTitle().isBlank())
                 {
-                    if(!caseSensitive)  // not case-sensitive. Set both novelTitle and substring in lowercase.
+                    if((caseSensitive && novel.getTitle().contains(substring))
+                            || (!caseSensitive && lowerNovelTitle.contains(lowerSubstring)))
                     {
-                        sensitiveSubstring = sensitiveSubstring.toLowerCase();
-                        novelTitle = novelTitle.toLowerCase();
-                    }
-
-                    if(novelTitle.contains(sensitiveSubstring))
-                    {
-                        novelTitle = toTitleCase(novelTitle);
-                        System.out.println(novelTitle);
+                        System.out.println(novel.getTitle());
                     }
                 }
 
@@ -257,30 +251,6 @@ public class BookStore
         }
     }
 
-    /**
-     * @param string the string to be transformed.
-     * @return the given string in title case.
-     */
-    private String toTitleCase(final String string)
-    {
-        String[] stringList;
-        StringBuilder stringToTitleCase;
-
-        stringToTitleCase = new StringBuilder();
-        stringList = string.split(" ");
-
-        for(final String word : stringList)
-        {
-            char[] charList;
-
-            charList = word.toCharArray();
-            charList[0] = Character.toTitleCase(charList[0]);
-            stringToTitleCase.append(new String(charList)).append(" ");
-
-        }
-        return stringToTitleCase.toString();
-
-    }
 
     /**
      * Prints all titles in UPPERCASE (except null Novels and null titles, which are ignored)
