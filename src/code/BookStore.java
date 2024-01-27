@@ -3,7 +3,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * BookStore
+ * BookStore BCIT
  *
  * @author Andres Arevalo & Sam
  * @version 1.0
@@ -31,7 +31,8 @@ public class BookStore
 
     public static void main(String[] args)
     {
-        BookStore bookStore;
+        final BookStore bookStore;
+        final int lengthTitle;
 
         if(args.length > 0)
         {
@@ -47,8 +48,9 @@ public class BookStore
             System.out.println("\n");
 
 
-            final int lengthTitle;
+
             lengthTitle = 13;
+
             System.out.println("Print Titles of Length = " + lengthTitle);
             bookStore.printTitlesOfLength(lengthTitle);
             System.out.println("\n");
@@ -87,7 +89,7 @@ public class BookStore
         if(property.equalsIgnoreCase("title"))
         {
             String longestTitle;
-            longestTitle = "";
+            longestTitle = null;
 
             for(final Novel novel : novels)
             {
@@ -98,7 +100,7 @@ public class BookStore
                         final String novelTitle;
                         novelTitle = novel.getTitle();
 
-                        if(novelTitle.length() > longestTitle.length())
+                        if(longestTitle == null || novelTitle.length() > longestTitle.length())
                         {
                             longestTitle = novelTitle;
                         }
@@ -111,7 +113,8 @@ public class BookStore
 
             return longestTitle;
 
-        }else if(property.equalsIgnoreCase("author"))
+        }
+        else if(property.equalsIgnoreCase("author"))
         {
 
             String longestAuthorName;
@@ -138,7 +141,8 @@ public class BookStore
 
             return longestAuthorName;
 
-        }else
+        }
+        else
         {
             return  null;
         }
@@ -152,15 +156,17 @@ public class BookStore
      *
      * @param substring the substring to be look in the author name.
      */
-    private void printNameStartsEndsWith(String substring)
+    private void printNameStartsEndsWith(final String substring)
     {
-        substring = substring.toLowerCase();
+        final String lowerSubstring;
+        lowerSubstring = substring.toLowerCase();
 
         for(final Novel novel : novels)
         {
             if(novel != null)
             {
-                String authorFullName = novel.getAuthorFullName();
+                String authorFullName;
+                authorFullName = novel.getAuthorFullName();
 
                 if(authorFullName != null && !authorFullName.isBlank())
                 {
@@ -169,8 +175,8 @@ public class BookStore
                     final boolean startsWith;
                     final boolean endsWith;
 
-                    startsWith = authorFullName.startsWith(substring);
-                    endsWith = authorFullName.endsWith(substring);
+                    startsWith = authorFullName.startsWith(lowerSubstring);
+                    endsWith = authorFullName.endsWith(lowerSubstring);
 
                     if(startsWith || endsWith)
                     {
@@ -217,7 +223,7 @@ public class BookStore
      * @param substring     substring must be in the title of the novel.
      * @param caseSensitive if true is case-sensitive if false is not.
      */
-    private void printTitlesContaining(String substring,
+    private void printTitlesContaining(final String substring,
                                 final boolean caseSensitive)
     {
         for(final Novel novel : novels)
@@ -225,17 +231,20 @@ public class BookStore
             if(novel != null)
             {
                 String novelTitle;
+                String sensitiveSubstring;
+
                 novelTitle = novel.getTitle();
+                sensitiveSubstring = substring; // case sensitive.
 
                 if(novelTitle != null && !novelTitle.isBlank())
                 {
-                    if(!caseSensitive)
+                    if(!caseSensitive)  // not case-sensitive. Set both novelTitle and substring in lowercase.
                     {
-                        substring = substring.toLowerCase();
+                        sensitiveSubstring = sensitiveSubstring.toLowerCase();
                         novelTitle = novelTitle.toLowerCase();
                     }
 
-                    if(novelTitle.contains(substring))
+                    if(novelTitle.contains(sensitiveSubstring))
                     {
                         novelTitle = toTitleCase(novelTitle);
                         System.out.println(novelTitle);
@@ -255,8 +264,9 @@ public class BookStore
     private String toTitleCase(final String string)
     {
         String[] stringList;
-        StringBuilder stringToTitleCase = new StringBuilder();
+        StringBuilder stringToTitleCase;
 
+        stringToTitleCase = new StringBuilder();
         stringList = string.split(" ");
 
         for(final String word : stringList)
