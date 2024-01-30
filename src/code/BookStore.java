@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * BookStore BCIT
  *
- * @author Andres Arevalo & Sam
+ * @author Andres Arevalo & Yeongsuk Oh
  * @version 1.0
  */
 public class BookStore
@@ -48,7 +48,6 @@ public class BookStore
             System.out.println("\n");
 
 
-
             lengthTitle = 13;
 
             System.out.println("Print Titles of Length = " + lengthTitle);
@@ -61,15 +60,14 @@ public class BookStore
 
 
             System.out.println("Print Longest: ");
-            System.out.println("Longest xyz = "+ bookStore.getLongest("xyz"));
+            System.out.println("Longest xyz = " + bookStore.getLongest("xyz"));
             System.out.println("Longest AutHor = " + bookStore.getLongest("AutHor"));
             System.out.println("Longest titlE = " + bookStore.getLongest("titlE"));
 
-        }else
+        } else
         {
             System.out.println("Please include the name of the BookStore as a command line argument");
         }
-
 
 
     }
@@ -113,8 +111,7 @@ public class BookStore
 
             return longestTitle;
 
-        }
-        else if(property.equalsIgnoreCase("author"))
+        } else if(property.equalsIgnoreCase("author"))
         {
 
             String longestAuthorName;
@@ -141,10 +138,9 @@ public class BookStore
 
             return longestAuthorName;
 
-        }
-        else
+        } else
         {
-            return  null;
+            return null;
         }
 
     }
@@ -191,24 +187,26 @@ public class BookStore
 
     /**
      * Prints all titles that are of exactly the specified length.
-     *
      * @param length the length of the title to be printed.
+     * @throws IllegalArgumentException if length <= 0 throw IllegalArgumentException with the message
+     * "bad length"
      */
-    private void printTitlesOfLength(final int length)
+    private void printTitlesOfLength(final int length) throws IllegalArgumentException
     {
+        if(length <= 0)
+        {
+            throw new IllegalArgumentException("bad length");
+        }
         for(final Novel novel : novels)
         {
-            if(novel != null)
+            if(novel != null && novel.getTitle() != null & !novel.getTitle().isBlank())
             {
-                if(novel.getTitle() != null && !novel.getTitle().isBlank())
-                {
-                    final int titleLength;
-                    titleLength = novel.getTitle().length();
+                final int titleLength;
+                titleLength = novel.getTitle().length();
 
-                    if(titleLength == length)
-                    {
-                        System.out.println(novel.getTitle());
-                    }
+                if(titleLength == length)
+                {
+                    System.out.println(novel.getTitle());
                 }
             }
 
@@ -224,7 +222,7 @@ public class BookStore
      * @param caseSensitive if true is case-sensitive if false is not.
      */
     private void printTitlesContaining(final String substring,
-                                final boolean caseSensitive)
+                                       final boolean caseSensitive)
     {
         for(final Novel novel : novels)
         {
