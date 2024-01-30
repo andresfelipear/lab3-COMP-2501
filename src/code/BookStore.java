@@ -34,39 +34,51 @@ public class BookStore
         final BookStore bookStore;
         final int lengthTitle;
 
-        if(args.length > 0)
+        try
         {
-            bookStore = new BookStore(args[0]);
+            if(args.length > 0)
+            {
+                bookStore = new BookStore(args[0]);
 
 
-            System.out.println("Print All Titles: ");
-            bookStore.printAllTitles();
-            System.out.println("\n");
+                System.out.println("Print All Titles: ");
+                bookStore.printAllTitles();
+                System.out.println("\n");
 
-            System.out.println("Print Titles Containing: ");
-            bookStore.printTitlesContaining("the", true);
-            System.out.println("\n");
-
-
-            lengthTitle = 13;
-
-            System.out.println("Print Titles of Length = " + lengthTitle);
-            bookStore.printTitlesOfLength(lengthTitle);
-            System.out.println("\n");
-
-            System.out.println("Print Authors names starts or ends with: ");
-            bookStore.printNameStartsEndsWith("aN");
-            System.out.println("\n");
+                System.out.println("Print Titles Containing: ");
+                bookStore.printTitlesContaining("the", true);
+                System.out.println("\n");
 
 
-            System.out.println("Print Longest: ");
-            System.out.println("Longest xyz = " + bookStore.getLongest("xyz"));
-            System.out.println("Longest AutHor = " + bookStore.getLongest("AutHor"));
-            System.out.println("Longest titlE = " + bookStore.getLongest("titlE"));
+                lengthTitle = 13;
 
-        } else
+                System.out.println("Print Titles of Length = " + lengthTitle);
+                bookStore.printTitlesOfLength(lengthTitle);
+                System.out.println("\n");
+
+                System.out.println("Print Authors names starts or ends with: ");
+                bookStore.printNameStartsEndsWith("aN");
+                System.out.println("\n");
+
+
+                System.out.println("Print Longest: ");
+                System.out.println("Longest xyz = " + bookStore.getLongest("xyz"));
+                System.out.println("Longest AutHor = " + bookStore.getLongest("AutHor"));
+                System.out.println("Longest titlE = " + bookStore.getLongest("titlE"));
+
+            } else
+            {
+                System.out.println("Please include the name of the BookStore as a command line argument");
+            }
+
+        }
+        catch(IllegalArgumentException | IllegalNameException | IllegalNovelPropertyException e)
         {
-            System.out.println("Please include the name of the BookStore as a command line argument");
+            System.out.println(e.getMessage());
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
         }
 
 
@@ -80,9 +92,15 @@ public class BookStore
      *
      * @param property the type of property to be checked in the novel.
      * @return longest author or longest title or null.
+     * @throws IllegalNovelPropertyException if property is not author nor title.
      */
-    private String getLongest(final String property)
+    private String getLongest(final String property) throws IllegalNovelPropertyException
     {
+        if(property == null || !property.equalsIgnoreCase("author")
+                || !property.equalsIgnoreCase("title"))
+        {
+            throw new IllegalNovelPropertyException("bad property");
+        }
 
         if(property.equalsIgnoreCase("title"))
         {
@@ -91,20 +109,15 @@ public class BookStore
 
             for(final Novel novel : novels)
             {
-                if(novel != null)
+                if(novel != null && novel.getTitle() != null && !novel.getTitle().isBlank())
                 {
-                    if(novel.getTitle() != null && !novel.getTitle().isBlank())
+                    final String novelTitle;
+                    novelTitle = novel.getTitle();
+
+                    if(longestTitle == null || novelTitle.length() > longestTitle.length())
                     {
-                        final String novelTitle;
-                        novelTitle = novel.getTitle();
-
-                        if(longestTitle == null || novelTitle.length() > longestTitle.length())
-                        {
-                            longestTitle = novelTitle;
-                        }
-
+                        longestTitle = novelTitle;
                     }
-
 
                 }
             }
@@ -119,18 +132,14 @@ public class BookStore
 
             for(final Novel novel : novels)
             {
-                if(novel != null)
+                if(novel != null && novel.getAuthorFullName() != null && !novel.getAuthorFullName().isBlank())
                 {
-                    if(novel.getAuthorFullName() != null && !novel.getAuthorFullName().isBlank())
+                    final String novelAuthorName;
+                    novelAuthorName = novel.getAuthorFullName();
+
+                    if(novelAuthorName.length() > longestAuthorName.length())
                     {
-                        final String novelAuthorName;
-                        novelAuthorName = novel.getAuthorFullName();
-
-                        if(novelAuthorName.length() > longestAuthorName.length())
-                        {
-                            longestAuthorName = novelAuthorName;
-                        }
-
+                        longestAuthorName = novelAuthorName;
                     }
 
                 }
@@ -151,9 +160,14 @@ public class BookStore
      * the substring match is case-insensitive (e.g. “aN” is the same as “An”, etc.)
      *
      * @param substring the substring to be look in the author name.
+     * @throws IllegalNameException if substring is null or substring is blank. Throw exception.
      */
-    private void printNameStartsEndsWith(final String substring)
+    private void printNameStartsEndsWith(final String substring) throws IllegalNameException
     {
+        if(substring == null || substring.isBlank())
+        {
+            throw new IllegalNameException("bad name");
+        }
         final String lowerSubstring;
         lowerSubstring = substring.toLowerCase();
 
@@ -187,9 +201,10 @@ public class BookStore
 
     /**
      * Prints all titles that are of exactly the specified length.
+     *
      * @param length the length of the title to be printed.
      * @throws IllegalArgumentException if length <= 0 throw IllegalArgumentException with the message
-     * "bad length"
+     *                                  "bad length"
      */
     private void printTitlesOfLength(final int length) throws IllegalArgumentException
     {
@@ -199,7 +214,7 @@ public class BookStore
         }
         for(final Novel novel : novels)
         {
-            if(novel != null && novel.getTitle() != null & !novel.getTitle().isBlank())
+            if(novel != null && novel.getTitle() != null && !novel.getTitle().isBlank())
             {
                 final int titleLength;
                 titleLength = novel.getTitle().length();
@@ -220,10 +235,15 @@ public class BookStore
      *
      * @param substring     substring must be in the title of the novel.
      * @param caseSensitive if true is case-sensitive if false is not.
+     * @throws IllegalArgumentException if substring is null or blank
      */
     private void printTitlesContaining(final String substring,
-                                       final boolean caseSensitive)
+                                       final boolean caseSensitive) throws IllegalArgumentException
     {
+        if(substring == null || substring.isBlank())
+        {
+            throw new IllegalArgumentException("bad string");
+        }
         for(final Novel novel : novels)
         {
             if(novel != null)
